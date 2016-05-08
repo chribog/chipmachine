@@ -176,6 +176,19 @@ public:
 		std::string name;
 		std::string fileName;
 		std::vector<SongInfo> songs;
+		
+		void reload() {
+			utils::File f{fileName};
+			if(f.exists()) {
+				songs.clear();
+				for(const auto &l : f.getLines()) {
+					LOGD("SONG:'%s'", l);
+					if(l != "")
+						songs.emplace_back(l);
+				}
+			}
+		}
+		
 		void save() {
 			utils::File f{fileName};
             f.open(utils::File::WRITE);

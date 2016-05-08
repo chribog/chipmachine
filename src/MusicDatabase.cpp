@@ -871,6 +871,7 @@ int MusicDatabase::getSongs(std::vector<SongInfo> &target, const SongInfo &match
 void MusicDatabase::addToPlaylist(const std::string &plist, const SongInfo &song) {
 	for(auto &pl : playLists) {
 		if(pl.name == plist) {
+			pl.reload();
 			pl.songs.push_back(song);
 			pl.save();
 			break;
@@ -881,6 +882,7 @@ void MusicDatabase::addToPlaylist(const std::string &plist, const SongInfo &song
 void MusicDatabase::removeFromPlaylist(const std::string &plist, const SongInfo &toRemove) {
 	for(auto &pl : playLists) {
 		if(pl.name == plist) {
+			pl.reload();
 			pl.songs.erase(std::remove_if(pl.songs.begin(), pl.songs.end(), [&](const SongInfo &song) ->bool {
 				LOGD("%s;%d vs %s;%d", song.path, song.starttune, toRemove.path, toRemove.starttune);
 				return song.path == toRemove.path && (song.starttune == -1 || song.starttune == toRemove.starttune);
