@@ -78,6 +78,10 @@ public:
 	void play(const SongInfo &si);
 	void update();
 	void render(uint32_t delta);
+	
+	void setupMediaKeyTap();
+	void playPause();
+	void nextSong();
 
 	enum ToastType { WHITE, ERROR, NORMAL, STICKY };
 

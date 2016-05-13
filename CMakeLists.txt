@@ -32,7 +32,6 @@ set(SOURCE_FILES
 	src/MusicBars.cpp
 	src/ChipMachine_config.cpp
 	src/ChipMachine_keys.cpp
-	src/ChipMachine_commands.cpp
 	src/MusicDatabase.cpp
 	src/MusicPlayer.cpp
 	src/MusicPlayerList.cpp
@@ -56,8 +55,21 @@ set(TEXTMODE_FILES
 	src/main.cpp
 )
 
+if(APPLE)
+	set(APPLE_FILES
+		src/spmediakeytap/NSObject+SPInvocationGrabbing.mm
+		src/spmediakeytap/SPMediaKeyTap.mm
+		src/ChipMachine_commands.mm
+		src/spmediakeytap/NSObject+SPInvocationGrabbing.h 
+		src/spmediakeytap/SPMediaKeyTap.h
+	)
+else (
+	set(SOURCE_FILES ${SOURCE_FILES} src/ChipMachine_commands.cpp)
+	)
+endif()
+		
 set(SOURCE_FILES ${SOURCE_FILES} src/version.h src/TextField.h src/TextListView.h src/CueSheet.h
-	src/Dialog.h src/LineEdit.h src/Icons.h src/SongInfo.h src/SongInfoField.h src/ChipInterface.h)
+	src/Dialog.h src/LineEdit.h src/Icons.h src/SongInfo.h src/SongInfoField.h src/ChipInterface.h ${APPLE_FILES})
 
 file(GLOB DATA_FILES data/*.txt)
 file(GLOB LUA_FILES lua/*.lua)
@@ -129,6 +141,9 @@ if(WIN32)
 endif()
 
 if(APPLE)
+	 find_library(CARBON_LIBRARY Carbon)
+	 set(EXTRA_LIBS ${EXTRA_LIBS} ${CARBON_LIBRARY})
+
 	add_executable(chipmachine MACOSX_BUNDLE ${SOURCE_FILES})
 	add_custom_command(TARGET chipmachine POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:chipmachine> ${CMAKE_CURRENT_BINARY_DIR})
@@ -136,7 +151,7 @@ else()
 	add_executable(chipmachine ${SOURCE_FILES})
 endif()
 
-target_link_libraries(chipmachine ${APONE_MODULES} ${MUSICPLAYER_PLUGINS} docopt_s)
+target_link_libraries(chipmachine ${APONE_MODULES} ${MUSICPLAYER_PLUGINS} docopt_s ${EXTRA_LIBS})
 
 if(NOT WIN32)
 	add_executable(cm ${PLUGIN_EXTRA_FILES} ${TEXTMODE_FILES})
