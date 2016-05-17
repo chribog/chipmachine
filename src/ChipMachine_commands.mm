@@ -18,7 +18,7 @@ void ChipMachineDelegate::mediaKeyTapReceivedMediaKeyEvent(SPMediaKeyTap* keyTap
 	int keyCode = (([event data1] & 0xFFFF0000) >> 16);
 	int keyFlags = ([event data1] & 0x0000FFFF);
 	int keyState = (((keyFlags & 0xFF00) >> 8)) == 0xA;
-	int keyRepeat = (keyFlags & 0x1);
+	//int keyRepeat = (keyFlags & 0x1);
 
 	if (keyState == 1) {
 
@@ -39,7 +39,7 @@ void ChipMachineDelegate::mediaKeyTapReceivedMediaKeyEvent(SPMediaKeyTap* keyTap
 }
 
 void ChipMachine::setupMediaKeyTap() {
-	// Register defaults for the whitelist of apps that want to use media keys. This works with spotify, but spotify does not give control back later. hmm
+	// Register defaults for the whitelist of apps that want to use media keys. This works with spotify, but spotify does not give control back later, probably because we're not in their whitelist
 	// [[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 	// 		[SPMediaKeyTap defaultMediaKeyUserBundleIdentifiers], kMediaKeyUsingBundleIdentifiersDefaultsKey,
 	// 	nil]];
